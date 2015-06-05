@@ -1,0 +1,127 @@
+Hello. I am tried to "PUT" but nosing change. My code: 
+$argsData = array( 
+    "declared_value" => 10000, // required 
+    "description"=> "Send Some", // optional 
+    "items"=> array( 
+    array( "weight"=> 1, // required 
+        "height"=> 1, // required 
+        "width"=> 1, // required 
+        "length"=> 1, // required 
+        "quantity"=> 1, // required 
+        "description"=> "carton" // required 
+    ),
+     ), 
+     "sender"=> array( 
+     "name"=> "My name",
+     "address" => "my address",
+     "phone"=> "my phone",
+     "country" => "AU", // required 
+     "suburb"=> "SYDNEY", // required 
+     "postcode"=> "2001", // required 
+     "type"=> "business", 
+ ),
+
+        "receiver"=>; array(
+             "name"=>; "My name",
+             "address" =>; "my address",
+             "phone"=>; "my phone",
+            "country" =>; "AU", // required
+            "suburb"=>; "DARWIN", // required
+            "postcode"=>; "800", // required
+            "type"=>; "business",
+        ),
+        "tailgate_pickup"=>; true, // optional
+        "tailgate_delivery"=>; true, // optional
+    );
+
+//$trans == ( my transdirect class) 
+$result_trans = $trans->getBookings(array(
+     "query"=>array( 
+     "type"=>"PUT", 
+     "JSON"=>true, 
+     "params"=>$argsData, 
+ "id"=>"824208" ) ));
+
+//function transdirect class public function getBookings(array $argsVar = array()){ $argsCurl = array( "url"=>"bookings" );
+
+        if( count($argsVar) ){
+            $argsCurl = $argsVar;
+            $argsCurl["url"] = "bookings";
+        }else{
+            //$argsCurl = $argsVar;
+        }
+        //return false;
+        return $this->;curl($argsCurl);
+    }
+
+public function curl(array $args = array()){ if( count($args) ){ $result = false; // echo "<pre>"; //var_dump(CJSON::encode($args["query"]["params"])); //echo "</pre>"; if( isset($args["url"]) && $args["url"] != "" ){ $curl = curl_init();
+
+                if( isset( $args["query"] ) &amp;&amp; count($args["query"]) ){
+                    if( isset( $args["query"]["type"] ) ){
+                        switch( $args["query"]["type"] ){
+                            case "GET":
+                                $args["url"] .= "?" . http_build_query( $args["query"]["params"] );
+
+                                break;
+                            case "POST":
+                                    //echo "work";
+                                curl_setopt_array($curl,array(
+                                    CURLOPT_POST,true,
+                                    CURLOPT_POSTFIELDS,CJSON::encode( $args["query"]["params"] )
+                                   // CURLOPT_POSTFIELDS, $args["query"]["params"]
+
+                                ));
+                                break;
+                            case "PUT":
+                                    //echo "work";
+
+                               // curl_setopt($curl, CURLOPT_PUT, true);
+                                curl_setopt_array($curl,array(
+                                    CURLOPT_CUSTOMREQUEST,"PUT",
+                                    CURLOPT_POSTFIELDS,CJSON::encode( $args["query"]["params"] )
+                                   // CURLOPT_POSTFIELDS, $args["query"]["params"]
+
+                                ));
+                                break;
+                        }
+                    }
+                }
+
+                //var_dump($args);
+
+                //$args["url"] .= "?offset?offset=100&amp;limit=100"
+                //echo "(" . urlencode($this->;_urlApi . $args["url"]) . ")";
+                //echo CJSON::decode( $args["query"]["params"] );
+                //die();
+                if( isset( $args["query"]["id"] ) ){
+                    $args["url"] .= "/" . $args["query"]["id"];
+                }
+                curl_setopt($curl,CURLOPT_URL,$this->;_urlApi . $args["url"] );
+                //echo $this->;_urlApi . $args["url"];
+
+                if( isset( $args["query"]["JSON"] ) &amp;&amp; $args["query"]["JSON"] == true ){
+                    curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                        "Content-Type: application/json"
+                    ));
+                    //echo "work";
+                }
+
+                //curl_setopt($curl,CURLOPT_URL,$this->;_urlApi . $args["url"] );
+                curl_setopt($curl,CURLOPT_USERPWD, $this->;_userName . ":" . $this->;_userPass);
+                curl_setopt($curl,CURLOPT_SSL_VERIFYHOST, 0);
+                curl_setopt($curl,CURLOPT_SSL_VERIFYPEER, 0);
+                curl_setopt($curl, CURLOPT_HEADER, FALSE);
+                curl_setopt($curl,CURLOPT_RETURNTRANSFER, TRUE);
+
+
+                //$result = CJSON::decode(curl_exec($curl));
+                $result = curl_exec($curl);
+                //var_dump($result);
+                curl_close($curl);
+            }
+
+            return $result;
+        }else{
+            return false;
+        }
+    }
